@@ -60,7 +60,7 @@ public class Player
     {
         actor.setFilter(FilterID.player_category, (short) (FilterID.floor_category |
                 FilterID.ceiling_category | FilterID.enemy_category | FilterID.platform_category
-                | FilterID.bag_catagory));
+                | FilterID.coin_category));
 
         actor.setData(0.5f, 0, true);
         actor.create(world, posX, posY, w, h, false);

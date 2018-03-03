@@ -15,7 +15,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.mygdx.main.actors.AnimatedActor;
 import com.mygdx.main.actors.GameActor;
 import com.mygdx.main.actors.TextureActor;
 import com.mygdx.main.actors.creation.CreateActor;
@@ -99,6 +101,8 @@ public class FirstMap implements Screen
 
     private GameActor rock;
     private GameActor collector;
+    private AnimatedActor coin;
+    private ArrayMap<String, Float> region1;
     private Trash trash;
 
     private InputMultiplexer controller;
@@ -211,12 +215,23 @@ public class FirstMap implements Screen
          */
 
         bag = new TextureActor("moon.png", main);
-        bag.setFilter(FilterID.bag_catagory, FilterID.player_category);
+        bag.setFilter((short) 0, FilterID.player_category);
         bag.setSpawn(0,  600, -100, -300);
         bag.setMoveVertical();
         bag.setResolution(64, 53);
         bag.setLimit(600);
         bag.create(world, 4, false);    //true for playing purposes, false for testing
+
+        region1 = new ArrayMap<String, Float>();
+        region1.put("Armature_fly", 2.5f);
+        coin = new AnimatedActor("watch.atlas", region1, main, false);
+        coin.setSpawn(0, 600, -50, -300);
+        coin.setResolution(25,25);
+        coin.setData(0, 0);
+        coin.setFilter(FilterID.coin_category, FilterID.player_category);
+        coin.setLimit(55);
+        coin.setMoveVertical();
+        coin.create(world, 5, false);
 
         splash = new Splash(main);
         splash.setData(player.getBody().getUserData(), enemy.getPadData());
@@ -321,10 +336,12 @@ public class FirstMap implements Screen
 
         splash.render(player.getX(), player.getY());
 
+        coin.displayAll(600);
+
         main.batch.end();
 
-        if(collision_filter.feedback(FilterID.player_category, FilterID.bag_catagory))
-            hud.addTrash(1);
+        if(collision_filter.feedback(FilterID.player_category, FilterID.coin_category))
+            hud.addCoin(1);
 
         //if(collision_filter.feedback(FilterID.player_category, FilterID.platform_category))
         //    player.applyJump();

@@ -46,6 +46,7 @@ public class Asset
         dataholder.load("branch.atlas", TextureAtlas.class);
         dataholder.load("pad.atlas", TextureAtlas.class);
         dataholder.load("splash.atlas", TextureAtlas.class);
+        dataholder.load("watch.atlas", TextureAtlas.class);
 
         dataholder.load("skin/flat-earth-ui.json", Skin.class);
 

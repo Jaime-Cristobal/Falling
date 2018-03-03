@@ -27,7 +27,7 @@ public class HUD implements GestureListener
     final public CheckBox menu;
 
     private Label amount;   //amount of trash
-    private int trashAmount;
+    private int coinAmount;
 
     final public GestureDetector detector;
 
@@ -55,7 +55,7 @@ public class HUD implements GestureListener
         menu = new CheckBox(null, main.skin);
 
         amount = new Label("Trash: 0", main.skin);
-        trashAmount = 0;
+        coinAmount = 0;
 
         detector = new GestureDetector(this);
     }
@@ -86,7 +86,7 @@ public class HUD implements GestureListener
         distance.Run();
 
         //score.setText("Distance: " + distance.GetScore() + " Km");
-        amount.setText("Trash: " + trashAmount);
+        amount.setText("Coin: " + coinAmount);
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
@@ -99,7 +99,17 @@ public class HUD implements GestureListener
 
     public void addTrash(int val)
     {
-        trashAmount += val;
+        coinAmount += val;
+    }
+
+    public void addCoin(int val)
+    {
+        coinAmount += val;
+    }
+
+    public void removeCoin(int val)
+    {
+        coinAmount -= val;
     }
 
     @Override

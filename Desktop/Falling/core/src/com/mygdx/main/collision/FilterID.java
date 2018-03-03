@@ -14,5 +14,5 @@ public class FilterID
     public final static short magnet_category = 0x0020;
     public final static short trash_category = 0x0040;
     public final static short collector_category = 0x0080;
-    public final static short bag_catagory = 0x0100;
+    public final static short coin_category = 0x0100;
 }
