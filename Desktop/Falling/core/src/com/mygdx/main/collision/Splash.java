@@ -34,7 +34,7 @@ public class Splash implements ContactListener
         region.put("Armature_splash", 3.7f);
 
         splash = new Animator("splash.atlas", region, main.assetmanager.dataholder);
-        splash.setScale(64, 25);
+        splash.setScale(38, 18);
         splash.setPlayback("Armature_splash");
 
         animate = false;
@@ -47,17 +47,18 @@ public class Splash implements ContactListener
         //splash.outValues();
 
 
+        /**
         if(splash.ifFrameEnd() && animate)
         {
             System.out.println("GARARAR");
             animate = false;
             splash.resetTime();
             //stopAnimate = true;
-        }
-        else if(animate && !splash.ifFrameEnd() && !stopAnimate)
+        }*/
+        if(animate && !splash.ifFrameEnd() && !stopAnimate)
         {
-            System.out.println("It's happening");
-            splash.render(main.batch, playerPosX / Scaler.PIXELS_TO_METERS, playerPosY / Scaler.PIXELS_TO_METERS - 1.2f);
+            //System.out.println("It's happening");
+            splash.render(main.batch, playerPosX / Scaler.PIXELS_TO_METERS, playerPosY / Scaler.PIXELS_TO_METERS - 1.5f);
             //canAnimate = false;
         }
 
@@ -70,7 +71,7 @@ public class Splash implements ContactListener
         }*/
 
         //System.out.println(stopAnimate);
-        System.out.println(animate);
+        //System.out.println(animate);
     }
 
     public void setData(Object player, Object platform)
@@ -112,8 +113,12 @@ public class Splash implements ContactListener
     {
         System.out.println("No contact");
 
-        if(!animate)
+        if(splash.ifFrameEnd())
+        {
+            splash.resetTime();
             stopAnimate = true;
+            animate = false;
+        }
     }
 
     /*
