@@ -52,6 +52,13 @@ public class Movement
      * will move and 0 will result with 0 speed (no movement).*/
     public void setDirection(int vert, int horiz)
     {
+        if(vert > 1 || vert < 0 || horiz > 1 || horiz < 1)
+        {
+            System.err.println("In class Movement, function setDirection(int vert, int horiz) must" +
+                    "contain a value of either 0 or 1 in its parameters.");
+            return;
+        }
+
         vertical = vert;
         horizontal = horiz;
     }
