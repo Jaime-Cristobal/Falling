@@ -34,7 +34,7 @@ public class Splash implements ContactListener
         region.put("Armature_splash", 3.7f);
 
         splash = new Animator("splash.atlas", region, main.assetmanager.dataholder);
-        splash.setScale(38, 18);
+        splash.setScale(44, 21);
         splash.setPlayback("Armature_splash");
 
         animate = false;

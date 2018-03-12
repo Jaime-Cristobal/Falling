@@ -40,11 +40,11 @@ public class HUD implements GestureListener
         main.assetmanager.dataholder.update();
 
         scoretable = new Table();
-        scoretable.setY(210f);
+        scoretable.setY(280f);
 
         menutable = new Table();
-        menutable.setX(275f);
-        menutable.setY(210f);
+        menutable.setX(205);
+        menutable.setY(280f);
 
         weapons = new Table();
         weapons.setX(275f);

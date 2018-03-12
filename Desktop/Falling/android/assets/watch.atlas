@@ -1,0 +1,40 @@
+
+watch.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Armature_fly
+  rotate: false
+  xy: 1, 1
+  size: 156, 150
+  orig: 156, 150
+  offset: 0, 0
+  index: 0
+Armature_fly
+  rotate: false
+  xy: 159, 1
+  size: 156, 150
+  orig: 156, 150
+  offset: 0, 0
+  index: 1
+Armature_fly
+  rotate: false
+  xy: 317, 1
+  size: 156, 150
+  orig: 156, 150
+  offset: 0, 0
+  index: 2
+Armature_fly
+  rotate: false
+  xy: 475, 1
+  size: 156, 150
+  orig: 156, 150
+  offset: 0, 0
+  index: 3
+Armature_fly
+  rotate: false
+  xy: 633, 1
+  size: 156, 150
+  orig: 156, 150
+  offset: 0, 0
+  index: 4

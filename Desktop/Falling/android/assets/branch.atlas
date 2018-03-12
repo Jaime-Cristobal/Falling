@@ -1,0 +1,54 @@
+
+branch.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Armature_move
+  rotate: false
+  xy: 1, 553
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 0
+Armature_move
+  rotate: false
+  xy: 1, 369
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 1
+Armature_move
+  rotate: false
+  xy: 259, 553
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 2
+Armature_move
+  rotate: false
+  xy: 1, 185
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 3
+Armature_move
+  rotate: false
+  xy: 259, 369
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 4
+Armature_move
+  rotate: false
+  xy: 517, 553
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 5
+Armature_move
+  rotate: false
+  xy: 1, 1
+  size: 256, 182
+  orig: 256, 182
+  offset: 0, 0
+  index: 6

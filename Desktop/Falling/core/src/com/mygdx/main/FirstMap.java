@@ -138,19 +138,19 @@ public class FirstMap implements Screen
 
         ground = new Platform();
         ground.setFilter(FilterID.floor_category, FilterID.player_category);
-        ground.create(world, 0, -50, 600, 10);
+        ground.create(world, 0, -50, 460, 10);
 
         ceiling = new Platform();
         ceiling.setFilter(FilterID.ceiling_category, FilterID.player_category);
-        ceiling.create(world, 0, 460, 600, 10);
+        ceiling.create(world, 0, 600, 460, 5);
 
         leftwall = new Platform();
         leftwall.setFilter(FilterID.ceiling_category, FilterID.player_category);
-        leftwall.create(world, -10, 0, 10, 460);
+        leftwall.create(world, -10, 0, 10, 600);
 
         rightwall = new Platform();
         rightwall.setFilter(FilterID.ceiling_category, FilterID.player_category);
-        rightwall.create(world, 600, 0, 10, 460);
+        rightwall.create(world, 460, 0, 10, 600);
 
         enemy = new EnemyManager(main);
         enemy.create(world);
@@ -226,10 +226,10 @@ public class FirstMap implements Screen
         region1.put("Armature_fly", 2.5f);
         coin = new AnimatedActor("watch.atlas", region1, main, false);
         coin.setSpawn(0, 600, -50, -300);
-        coin.setResolution(25,25);
+        coin.setResolution(50,50);
         coin.setData(0, 0);
         coin.setFilter(FilterID.coin_category, FilterID.player_category);
-        coin.setLimit(55);
+        coin.setLimit(65);
         coin.setMoveVertical();
         coin.create(world, 5, false);
 
@@ -316,8 +316,8 @@ public class FirstMap implements Screen
 
         mapSelect.display(stage.getWidth(), stage.getHeight());
         //main.batch.draw((Texture) main.assetmanager.dataholder.get("clouds.png"), 0, 0, stage.getWidth(), stage.getHeight());
-        main.batch.draw((Texture) main.assetmanager.dataholder.get("door1.png"), -270, 0, 300, 460);
-        main.batch.draw((Texture) main.assetmanager.dataholder.get("door2.png"), 570, 0, 300, 460);
+        //main.batch.draw((Texture) main.assetmanager.dataholder.get("door1.png"), -270, 0, 300, 460);
+        //main.batch.draw((Texture) main.assetmanager.dataholder.get("door2.png"), 570, 0, 300, 460);
 
         //trash.display(player.getBody().getPosition());
 
@@ -336,7 +336,7 @@ public class FirstMap implements Screen
 
         splash.render(player.getX(), player.getY());
 
-        coin.displayAll(600);
+        coin.displayAll(1000);
 
         main.batch.end();
 

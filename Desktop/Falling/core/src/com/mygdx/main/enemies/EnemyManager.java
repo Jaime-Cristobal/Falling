@@ -24,11 +24,11 @@ public class EnemyManager
     public void create(World world)
     {
         star.setResolution(48, 32);
-        star.setSpawn(0, 600, -30, -15);
+        star.setSpawn(0, 460, -1000, -15);
         star.setFilter(FilterID.platform_category, FilterID.player_category);
         star.setData(0.4f, 0.2f);
-        star.setBodyType(BodyDef.BodyType.DynamicBody);
-        star.setLimit(49);
+        star.setBodyType(BodyDef.BodyType.KinematicBody);
+        star.setLimit(65);
         star.setMoveVertical();
         star.create(world, 5, false);
     }
