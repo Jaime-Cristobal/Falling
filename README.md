@@ -5,3 +5,11 @@
 ##### of coins for the timer to gain more time
 
 ##### Possible idea: knock the coin/timers using physics with the player to the side to gain points/score
+
+## -------------------------------------------------
+
+##### Player -> gesture controlled 
+##### Coins -> used to score and give to collectors
+##### Collectors -> push coins to collector using physics to score
+##### Bandits -> can steal your points & destroy coins
+##### Enemies -> instantly ends the game
