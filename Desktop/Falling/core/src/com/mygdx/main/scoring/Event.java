@@ -6,19 +6,74 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.main.collision.FilterID;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 /**
  * Created by seacow on 3/12/2018.
  */
 
-public class Scoring implements ContactListener
+public class Event implements ContactListener
 {
     private Object actor;
+    private Object aActor, bActor;
+    private boolean addScore, subScore, isSplash;
+    private boolean collision;
+    private short catID;
+
+    private short cat1, cat2;
+
+    public Event()
+    {
+        addScore = false;
+        subScore = false;
+        isSplash = false;
+        catID = 0;
+
+        collision = false;
+        cat1 = 0;
+        cat2 = 0;
+    }
 
     /**pass the box2D Body .getUserData here to check if the coin is colliding
      * with the player or collector*/
-    public void checkActor(Object actor)
+    public void checkActor(Object actor, short catID)
     {
         this.actor = actor;
+        this.catID = catID;
+    }
+
+    public void checkActor(short cat1, short cat2)
+    {
+        this.cat1 = cat1;
+        this.cat2 = cat2;
+    }
+
+    public boolean checkCollision(Object actorData)
+    {
+        if(actorData == aActor || actorData == bActor)
+            return true;
+
+        return false;
+    }
+
+    public boolean getAddScore()
+    {
+        return addScore;
+    }
+
+    public boolean getSubScore()
+    {
+        return subScore;
+    }
+
+    public boolean getSpash()
+    {
+        return isSplash;
+    }
+
+    public boolean isColliding()
+    {
+        return collision;
     }
 
     /**Register this to box2D World*/
@@ -28,28 +83,37 @@ public class Scoring implements ContactListener
     }
 
     /** Called when two fixtures begin to touch. */
+    /**
+     * What is being checked depends on the checkActor(...) function
+     * checkActor(...) --> is it colliding with ---> FilterID*/
     public void beginContact (Contact contact)
     {
+        /**
         if((actor == contact.getFixtureA().getUserData()
-                && FilterID.player_category == contact.getFixtureB().getFilterData().categoryBits)
+                && catID == contact.getFixtureB().getFilterData().categoryBits)
                 || (actor == contact.getFixtureB().getUserData()
-                && FilterID.player_category == contact.getFixtureA().getFilterData().categoryBits))
+                && catID == contact.getFixtureA().getFilterData().categoryBits))
         {
-            System.out.println("Player has touched coin " + actor);
-        }
+            System.out.println("Colliding");
+            collision = true;
+        }*/
 
-        if((actor == contact.getFixtureA().getUserData()
-                && FilterID.collector_category == contact.getFixtureB().getFilterData().categoryBits)
-                || (actor == contact.getFixtureB().getUserData()
-                && FilterID.collector_category == contact.getFixtureA().getFilterData().categoryBits))
+        aActor = contact.getFixtureA().getBody().getUserData();
+        bActor = contact.getFixtureB().getBody().getUserData();
+
+        if((cat1 == contact.getFixtureA().getFilterData().categoryBits
+                && cat2 == contact.getFixtureB().getFilterData().categoryBits)
+                || (cat1 == contact.getFixtureB().getFilterData().categoryBits
+                && cat2 == contact.getFixtureA().getFilterData().categoryBits))
         {
-            System.out.println("Coin has touched collector " + actor);
+            collision = true;
         }
     }
 
     /** Called when two fixtures cease to touch. */
     public void endContact (Contact contact)
     {
+        collision = false;
         //leave blank
     }
 

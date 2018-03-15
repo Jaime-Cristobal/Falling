@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.mygdx.main.actors.AnimatedActor;
@@ -28,40 +28,26 @@ import com.mygdx.main.collision.Splash;
 import com.mygdx.main.enemies.EnemyManager;
 import com.mygdx.main.enemies.Trash;
 import com.mygdx.main.enemies.TrashManager;
-import com.mygdx.main.joints.CreateJoint;
 import com.mygdx.main.maps.Map4;
-import com.mygdx.main.maps.MapManager;
 import com.mygdx.main.objects.Platform;
 import com.mygdx.main.player.Player;
+import com.mygdx.main.scoring.Character;
+import com.mygdx.main.scoring.Event;
 import com.mygdx.main.ui.HUD;
 import com.mygdx.main.ui.Scaler;
 
 /**
  * Created by FlapJack on 7/22/2017.
  *
- * Try to put a hud menu option which would pause the game
- *      -you can choose here if you want sounds or quit the game
+ * The game will be a platform base with a player, coin, traps, collector, bandit, and enemies
  *
- * Put death effects.
+ * coin -> various items on the screen to be collected
  *
- * Maybe a health option?
+ * collector -> bring coins to the collector to score
  *
- * Buff items like shields or ghost form (ignores enemies)
- *      --- you could change the filters to 0 mid game
+ * bandit -> steals your score and destroy coins on the screen
  *
- * Sound effects still need
- *
- * Better backgrounds
- *
- * Better menu
- *
- * The ceiling and floor still clips, does not fully stop the player
- *
- * Power ups, shields, and maybe evade system
- *
- * need to scale enemy respawn points .... or maybe not
- *
- * Should probably make different hex categories for the types of enemies
+ * enemies -> kills the player; getting hit ends the game
  */
 
 public class FirstMap implements Screen
@@ -114,6 +100,11 @@ public class FirstMap implements Screen
     private GameActor bag;
 
     private Splash splash;
+
+    //private Array<Character> coins;
+    private Character coins;
+    private Character collector1;
+    private Event scoreSys;
 
     public FirstMap(final Main batch_param)
     {
@@ -190,13 +181,14 @@ public class FirstMap implements Screen
         rock.setNoGravity();
          */
 
+        /**
         collector = new TextureActor("collector.png", main);
         collector.setResolution(156, 112);
         collector.setSpawn(605, 700, 0, 120);
         collector.setLimit(-330);
         collector.setFilter(FilterID.collector_category, FilterID.trash_category);
         collector.create(world, 1, true);
-        collector.setNoGravity();
+        collector.setNoGravity();*/
 
         trash = new Trash("rock.png", main, 400);
         trash.setListerner(world);
@@ -224,6 +216,8 @@ public class FirstMap implements Screen
 
         region1 = new ArrayMap<String, Float>();
         region1.put("Armature_fly", 2.5f);
+
+        /**
         coin = new AnimatedActor("watch.atlas", region1, main, false);
         coin.setSpawn(0, 600, -50, -300);
         coin.setResolution(50,50);
@@ -232,8 +226,32 @@ public class FirstMap implements Screen
         coin.setLimit(65);
         coin.setMoveVertical();
         coin.create(world, 5, false);
+         */
+
+        coins = new Character("watch.atlas", 25, 25, main);
+        coins.setSpawn(0, 460, -50, -300);
+        coins.createAnimation(world, 1, 0, 0, FilterID.coin_category,
+                (short)(FilterID.collector_category | FilterID.player_category), region1);
+
+        /**
+        coins = new Array<Character>();
+        for(int n = 0; n < 5; n++)
+        {
+            coins.add(new Character("watch.atlas", 25, 25, main));
+            coins.get(n).setSpawn(0, 460, -50, -300);
+            coins.get(n).createAnimation(world, n, 0, 0, FilterID.coin_category,
+                    (short)(FilterID.collector_category | FilterID.player_category), region1);
+        }*/
+
+        collector1 = new Character("ship1.png", 64, 22, main);
+        collector1.setSpawn(0, 460, -50, -300);
+        collector1.createTexture(world, 1, 0, 0, FilterID.collector_category,
+                (short)(FilterID.coin_category | FilterID.player_category));
+
+        scoreSys = new Event();
 
         splash = new Splash(main);
+        splash.setDetector(collision_filter);
         splash.setData(player.getBody().getUserData(), enemy.getPadData());
 
         debugRenderer = new Box2DDebugRenderer();
@@ -253,7 +271,10 @@ public class FirstMap implements Screen
 
         hud.Create();
         world.setContactFilter(collision_filter);
-        world.setContactListener(splash.getListener());
+        //world.setContactListener(splash.getListener());
+        world.setContactListener(scoreSys.getListerner());
+
+        splash.setDetector(collision_filter);
 
         //Button functionality for menu in HUD
 
@@ -292,7 +313,7 @@ public class FirstMap implements Screen
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
-        //debugMatrix = main.batch.getProjectionMatrix().cpy().scale(Scaler.PIXELS_TO_METERS, Scaler.PIXELS_TO_METERS, 0);
+        debugMatrix = main.batch.getProjectionMatrix().cpy().scale(Scaler.PIXELS_TO_METERS, Scaler.PIXELS_TO_METERS, 0);
 
         //daytime();
 
@@ -331,12 +352,39 @@ public class FirstMap implements Screen
 
         //collector.displayAll(-1000);
 
+        /**
+        for(Character iter : coins)
+        {
+            iter.display(1000);
+            if(iter.checkCollision(scoreSys, FilterID.player_category))
+                System.out.println("REKT");
+            //scoreSys.checkActor(iter.getUserData(), FilterID.player_category);
+            //if(scoreSys.isColliding())
+            //{
+            //    System.out.println("rekt");
+            //    iter.forceRespawn();
+            //}
+        }*/
+
+        //scoreSys.checkActor(coins.getUserData(), FilterID.player_category);
+        //if(scoreSys.isColliding())
+        scoreSys.checkActor(FilterID.coin_category, FilterID.player_category);
+        if(scoreSys.checkCollision(coins.getUserData()) && scoreSys.isColliding())
+        {
+            System.out.println("rekt");
+            //coins.forceRespawn();
+            coins.setFollowPlayer(player.getInputPosition());
+        }
+        coins.display(1000);
+
+        collector1.display(1400);
+
         //if(collision_filter.feedback(FilterID.player_category, FilterID.platform_category))
         //    mapSelect.splashEffect(player.getX(), player.getY());
 
         splash.render(player.getX(), player.getY());
 
-        coin.displayAll(1000);
+        //coin.displayAll(1000);
 
         main.batch.end();
 
@@ -346,7 +394,7 @@ public class FirstMap implements Screen
         //if(collision_filter.feedback(FilterID.player_category, FilterID.platform_category))
         //    player.applyJump();
 
-        //debugRenderer.render(world, debugMatrix);
+        debugRenderer.render(world, debugMatrix);
 
         hud.Render();
     }

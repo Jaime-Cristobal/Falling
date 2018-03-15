@@ -1,6 +1,7 @@
 package com.mygdx.main.actors;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.main.actors.creation.CreateActor;
 
 /**
@@ -9,8 +10,8 @@ import com.mygdx.main.actors.creation.CreateActor;
 
 public class Movement
 {
-    private int vertical;
-    private int horizontal;
+    private float vertical;
+    private float horizontal;
 
     private float xMin;
     private float xMax;
@@ -52,13 +53,6 @@ public class Movement
      * will move and 0 will result with 0 speed (no movement).*/
     public void setDirection(int vert, int horiz)
     {
-        if(vert > 1 || vert < 0 || horiz > 1 || horiz < 1)
-        {
-            System.err.println("In class Movement, function setDirection(int vert, int horiz) must" +
-                    "contain a value of either 0 or 1 in its parameters.");
-            return;
-        }
-
         vertical = vert;
         horizontal = horiz;
     }
@@ -74,6 +68,12 @@ public class Movement
         if(respawn(currentActor))
             currentActor.setPosition(MathUtils.random(xMin, xMax),
                     MathUtils.random(yMin, yMax));
+    }
+
+    public void setPosition(Vector2 position)
+    {
+        horizontal = position.x;
+        vertical = position.y;
     }
 
     private boolean respawn(CreateActor currentActor)

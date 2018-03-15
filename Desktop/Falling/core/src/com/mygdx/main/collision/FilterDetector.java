@@ -81,8 +81,8 @@ public class FilterDetector implements ContactFilter
                 return true;
             }
         }
-        //else
-        //    release();
+        else
+            release();
 
         return false;
     }

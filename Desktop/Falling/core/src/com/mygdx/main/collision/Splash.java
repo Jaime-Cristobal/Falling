@@ -24,7 +24,7 @@ public class Splash implements ContactListener
 
     private boolean animate;
     private boolean stopAnimate;
-
+    private FilterDetector detector;
 
     public Splash(Main mainParam)
     {
@@ -41,9 +41,15 @@ public class Splash implements ContactListener
         stopAnimate = true;
     }
 
+    public void setDetector(FilterDetector detector)
+    {
+        this.detector = detector;
+    }
+
     public void render(float playerPosX, float playerPosY)
     {
         splash.recordEndTime();
+        collision();
         //splash.outValues();
 
 
@@ -78,6 +84,28 @@ public class Splash implements ContactListener
     {
         playerData = player;
         platformData = platform;
+    }
+
+    public void collision()
+    {
+        if(detector.feedback(FilterID.player_category, FilterID.platform_category) && stopAnimate)
+        {
+            System.out.println("Contact initiated");
+            if(stopAnimate)
+            {
+                animate = true;
+                stopAnimate = false;
+            }
+        }
+        else
+        {
+            if(splash.ifFrameEnd())
+            {
+                splash.resetTime();
+                stopAnimate = true;
+                animate = false;
+            }
+        }
     }
 
     /**
