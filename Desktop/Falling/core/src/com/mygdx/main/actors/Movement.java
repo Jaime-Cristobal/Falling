@@ -1,5 +1,6 @@
 package com.mygdx.main.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.main.actors.creation.CreateActor;
@@ -70,6 +71,23 @@ public class Movement
                     MathUtils.random(yMin, yMax));
     }
 
+    public void setSpeed(CreateActor currentActor, float x, float y)
+    {
+        currentActor.setActive(true);
+        currentActor.setSpeed(x * Gdx.graphics.getDeltaTime() * 1000,
+                y * Gdx.graphics.getDeltaTime() * 1000);
+    }
+
+    public void forceRespawn(CreateActor currentActor)
+    {
+        System.out.println("FORCED");
+        //currentActor.setSpeed(0, 0);
+        //currentActor.applyForce(0, 0);
+        currentActor.setPosition(MathUtils.random(xMin, xMax),
+                MathUtils.random(yMin, yMax));
+    }
+
+    /**NOT WORKING AS INTENDED*/
     public void setPosition(Vector2 position)
     {
         horizontal = position.x;

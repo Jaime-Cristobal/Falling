@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -101,10 +102,12 @@ public class FirstMap implements Screen
 
     private Splash splash;
 
-    //private Array<Character> coins;
+    private Array<Character> coins1;
     private Character coins;
     private Character collector1;
-    private Event scoreSys;
+    private Event event;
+
+    private int amount;
 
     public FirstMap(final Main batch_param)
     {
@@ -125,7 +128,7 @@ public class FirstMap implements Screen
         hud = new HUD(main, stage);
 
         player = new Player(main);
-        player.createBody(world, 25, 330, 24, 34);
+        player.createBody(world, 200, 500, 24, 34);
 
         ground = new Platform();
         ground.setFilter(FilterID.floor_category, FilterID.player_category);
@@ -230,31 +233,33 @@ public class FirstMap implements Screen
 
         coins = new Character("watch.atlas", 25, 25, main);
         coins.setSpawn(0, 460, -50, -300);
-        coins.createAnimation(world, 1, 0, 0, FilterID.coin_category,
+        coins.createAnimation(world, 1, 0.1f, 0, FilterID.coin_category,
                 (short)(FilterID.collector_category | FilterID.player_category), region1);
 
         /**
-        coins = new Array<Character>();
+        coins1 = new Array<Character>();
         for(int n = 0; n < 5; n++)
         {
-            coins.add(new Character("watch.atlas", 25, 25, main));
-            coins.get(n).setSpawn(0, 460, -50, -300);
-            coins.get(n).createAnimation(world, n, 0, 0, FilterID.coin_category,
+            coins1.add(new Character("watch.atlas", 25, 25, main));
+            coins1.get(n).setSpawn(0, 460, -50, -300);
+            coins1.get(n).createAnimation(world, n, 0, 0, FilterID.coin_category,
                     (short)(FilterID.collector_category | FilterID.player_category), region1);
         }*/
 
         collector1 = new Character("ship1.png", 64, 22, main);
-        collector1.setSpawn(0, 460, -50, -300);
+        collector1.setSpawn(60, 400, -50, -300);
         collector1.createTexture(world, 1, 0, 0, FilterID.collector_category,
                 (short)(FilterID.coin_category | FilterID.player_category));
 
-        scoreSys = new Event();
+        event = new Event();
 
         splash = new Splash(main);
         splash.setDetector(collision_filter);
         splash.setData(player.getBody().getUserData(), enemy.getPadData());
 
         debugRenderer = new Box2DDebugRenderer();
+
+        amount = 0;
     }
 
     /** Called when this screen becomes the current screen for a {@link com.badlogic.gdx.Game}. */
@@ -269,10 +274,14 @@ public class FirstMap implements Screen
 
         goal = 500;
 
+        event.setCoin(coins);
+        event.setCollector(collector1);
+        event.setPlayer(player);
+
         hud.Create();
         world.setContactFilter(collision_filter);
         //world.setContactListener(splash.getListener());
-        world.setContactListener(scoreSys.getListerner());
+        world.setContactListener(event.getListerner());
 
         splash.setDetector(collision_filter);
 
@@ -313,7 +322,7 @@ public class FirstMap implements Screen
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 
-        debugMatrix = main.batch.getProjectionMatrix().cpy().scale(Scaler.PIXELS_TO_METERS, Scaler.PIXELS_TO_METERS, 0);
+        //debugMatrix = main.batch.getProjectionMatrix().cpy().scale(Scaler.PIXELS_TO_METERS, Scaler.PIXELS_TO_METERS, 0);
 
         //daytime();
 
@@ -347,54 +356,36 @@ public class FirstMap implements Screen
 
         //trashes.display(player.getBody().getPosition());
         //bag.displayAll(800);
+
+        coins.display(1600);
+        if(coins.outOfRange())
+        {
+            System.out.println("respawn");
+            coins.forceRespawn();
+            player.resetFilter();
+            if(hud.getCoin() != 11)
+            {
+                hud.addCoin(1);
+            }
+        }
+
         player.display(collision_filter);
         enemy.display();
 
-        //collector.displayAll(-1000);
-
-        /**
-        for(Character iter : coins)
-        {
-            iter.display(1000);
-            if(iter.checkCollision(scoreSys, FilterID.player_category))
-                System.out.println("REKT");
-            //scoreSys.checkActor(iter.getUserData(), FilterID.player_category);
-            //if(scoreSys.isColliding())
-            //{
-            //    System.out.println("rekt");
-            //    iter.forceRespawn();
-            //}
-        }*/
-
-        //scoreSys.checkActor(coins.getUserData(), FilterID.player_category);
-        //if(scoreSys.isColliding())
-        scoreSys.checkActor(FilterID.coin_category, FilterID.player_category);
-        if(scoreSys.checkCollision(coins.getUserData()) && scoreSys.isColliding())
-        {
-            System.out.println("rekt");
-            //coins.forceRespawn();
-            coins.setFollowPlayer(player.getInputPosition());
-        }
-        coins.display(1000);
-
-        collector1.display(1400);
-
-        //if(collision_filter.feedback(FilterID.player_category, FilterID.platform_category))
-        //    mapSelect.splashEffect(player.getX(), player.getY());
+        collector1.display(1000);
 
         splash.render(player.getX(), player.getY());
 
-        //coin.displayAll(1000);
-
         main.batch.end();
 
-        if(collision_filter.feedback(FilterID.player_category, FilterID.coin_category))
-            hud.addCoin(1);
+        //player blows up if coin amount is more than 10
+        if(hud.getCoin() > 10)
+        {
+            main.setScreen(new UIMenu(main));
+            dispose();
+        }
 
-        //if(collision_filter.feedback(FilterID.player_category, FilterID.platform_category))
-        //    player.applyJump();
-
-        debugRenderer.render(world, debugMatrix);
+        //debugRenderer.render(world, debugMatrix);
 
         hud.Render();
     }

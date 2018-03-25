@@ -97,6 +97,11 @@ public class HUD implements GestureListener
         return distance.GetScore();
     }
 
+    public int getCoin()
+    {
+        return coinAmount;
+    }
+
     public void addTrash(int val)
     {
         coinAmount += val;

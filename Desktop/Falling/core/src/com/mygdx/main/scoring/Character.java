@@ -1,5 +1,6 @@
 package com.mygdx.main.scoring;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -24,7 +25,9 @@ public class Character
     private float xMin, xMax, yMin, yMax;
     private String file;
     private Vector2 playerPos;
-    private boolean followPlayer;
+    private boolean event;
+
+    private float playerX, playerY;
 
     public Character(String file, float width, float height, Main main)
     {
@@ -40,7 +43,10 @@ public class Character
         this.height = height;
         this.file = file;
         playerPos = null;
-        followPlayer = false;
+        event = false;
+
+        playerX = 0;
+        playerY = 0;
     }
 
     public void setSpawn(float xMin, float xMax, float yMin, float yMax)
@@ -82,9 +88,11 @@ public class Character
 
     public void display(float speed)
     {
-        if(followPlayer)
+        if(event)
         {
-            movement.setPosition(playerPos);
+            //System.out.println("RAGG");
+            //movement.setPosition(playerPos);
+            actor.setSpeed(playerX, playerY);
         }
         else
         {
@@ -96,23 +104,55 @@ public class Character
 
     public void forceRespawn()
     {
+        //event = false;
         movement.resetRespawnVal();
+        movement.forceRespawn(actor);
     }
 
-    public void setFollowPlayer(Vector2 playerPos)
+    //public void setFollowPlayer(Vector2 playerPos)
+    public void setEvent(float getX, float getY)
     {
-        followPlayer = true;
-        this.playerPos = playerPos;
-    }
-
-    public boolean checkCollision(Event event, short category)
-    {
-        event.checkActor(actor.getBody().getUserData(), category);
-        return event.isColliding();
+        event = true;
+        playerX = getX;
+        playerY = getY;
     }
 
     public Object getUserData()
     {
         return actor.getBody().getUserData();
+    }
+
+    public boolean outOfRange()
+    {
+        if((actor.getX() < 0 || actor.getX() > 46 || actor.getY() < -70 || actor.getY() > 70)
+                )
+        {
+            event = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**Ensures that outOfRange doesn't run when it respawns*/
+    private void outOfSpawn()
+    {
+        if(actor.getY() > 0)
+            movement.resetRespawnVal();
+    }
+
+    public float getX()
+    {
+        return actor.getX();
+    }
+
+    public float getY()
+    {
+        return actor.getY();
+    }
+
+    public void setPosition(float x, float y)
+    {
+        actor.setPosition(x, y);
     }
 }

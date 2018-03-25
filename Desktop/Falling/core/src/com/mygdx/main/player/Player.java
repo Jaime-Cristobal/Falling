@@ -128,6 +128,18 @@ public class Player
         return actor.getBody();
     }
 
+    public void setFilterEmpty()
+    {
+        actor.setFilter(FilterID.player_category, (short) 0);
+    }
+
+    public void resetFilter()
+    {
+        actor.setFilter(FilterID.player_category, (short) (FilterID.floor_category |
+                FilterID.ceiling_category | FilterID.enemy_category | FilterID.platform_category
+                | FilterID.coin_category));
+    }
+
     public float getY()
     {
         return actor.getY() * Scaler.PIXELS_TO_METERS;

@@ -1,10 +1,14 @@
 package com.mygdx.main.scoring;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.mygdx.main.actors.creation.CreateActor;
 import com.mygdx.main.collision.FilterID;
+import com.mygdx.main.player.Player;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -15,65 +19,37 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 public class Event implements ContactListener
 {
     private Object actor;
-    private Object aActor, bActor;
     private boolean addScore, subScore, isSplash;
     private boolean collision;
-    private short catID;
 
-    private short cat1, cat2;
+    private Player player;
+    private Character coin, collector;
 
     public Event()
     {
         addScore = false;
         subScore = false;
         isSplash = false;
-        catID = 0;
-
         collision = false;
-        cat1 = 0;
-        cat2 = 0;
+
+        player = null;
+        coin = null;
+        collector = null;
     }
 
-    /**pass the box2D Body .getUserData here to check if the coin is colliding
-     * with the player or collector*/
-    public void checkActor(Object actor, short catID)
+    public void setCoin(Character coin)
     {
-        this.actor = actor;
-        this.catID = catID;
+        this.coin = coin;
     }
 
-    public void checkActor(short cat1, short cat2)
+    public void setCollector(Character collector)
     {
-        this.cat1 = cat1;
-        this.cat2 = cat2;
+        this.collector = collector;
     }
 
-    public boolean checkCollision(Object actorData)
+    public void setPlayer(Player player)
     {
-        if(actorData == aActor || actorData == bActor)
-            return true;
-
-        return false;
-    }
-
-    public boolean getAddScore()
-    {
-        return addScore;
-    }
-
-    public boolean getSubScore()
-    {
-        return subScore;
-    }
-
-    public boolean getSpash()
-    {
-        return isSplash;
-    }
-
-    public boolean isColliding()
-    {
-        return collision;
+        this.player = player;
     }
 
     /**Register this to box2D World*/
@@ -88,25 +64,31 @@ public class Event implements ContactListener
      * checkActor(...) --> is it colliding with ---> FilterID*/
     public void beginContact (Contact contact)
     {
-        /**
-        if((actor == contact.getFixtureA().getUserData()
-                && catID == contact.getFixtureB().getFilterData().categoryBits)
-                || (actor == contact.getFixtureB().getUserData()
-                && catID == contact.getFixtureA().getFilterData().categoryBits))
-        {
-            System.out.println("Colliding");
-            collision = true;
-        }*/
+        Object aActor = contact.getFixtureA().getBody().getUserData();
+        Object bActor = contact.getFixtureB().getBody().getUserData();
+        short filterA = contact.getFixtureA().getFilterData().categoryBits;
+        short filterB = contact.getFixtureB().getFilterData().categoryBits;
 
-        aActor = contact.getFixtureA().getBody().getUserData();
-        bActor = contact.getFixtureB().getBody().getUserData();
-
-        if((cat1 == contact.getFixtureA().getFilterData().categoryBits
-                && cat2 == contact.getFixtureB().getFilterData().categoryBits)
-                || (cat1 == contact.getFixtureB().getFilterData().categoryBits
-                && cat2 == contact.getFixtureA().getFilterData().categoryBits))
+        //if((coin.getUserData() == aActor && player.getBody().getUserData() == bActor)
+        //        || (coin.getUserData() == bActor && player.getBody().getUserData() == aActor))
+        if((FilterID.coin_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.coin_category == filterB && FilterID.player_category == filterA))
         {
-            collision = true;
+            System.out.println("rekt");
+            player.setFilterEmpty();
+            contact.setEnabled(false);
+            coin.setEvent(player.getX() * 1000 * Gdx.graphics.getDeltaTime(),
+                    player.getY() * 1000 * Gdx.graphics.getDeltaTime());
+        }
+        else
+        {
+            contact.setEnabled(true);
+        }
+
+        if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.collector_category == filterB && FilterID.player_category == filterA))
+        {
+            System.out.println("HIT");
         }
     }
 
