@@ -88,7 +88,6 @@ public class FirstMap implements Screen
 
     private GameActor rock;
     private GameActor collector;
-    private AnimatedActor coin;
     private ArrayMap<String, Float> region1;
     private Trash trash;
 
@@ -97,14 +96,9 @@ public class FirstMap implements Screen
     private Box2DDebugRenderer debugRenderer;
     private Matrix4 debugMatrix;
 
-    private TrashManager trashes;
-    private GameActor bag;
-
     private Splash splash;
 
-    private Array<Character> coins1;
-    private Character coins;
-    private Character collector1;
+    private Character coins, collector1;
     private Event event;
 
     private int amount;
@@ -173,18 +167,6 @@ public class FirstMap implements Screen
         parachute.create(world, 1000, 1000, 128, 106, false);
 
         /**
-        rock = new TextureActor("rock.png", main);
-        rock.setData(0.5f, 0);
-        rock.setNoGravity();
-        rock.setFilter(FilterID.trash_category, FilterID.magnet_category);
-        rock.setLimit(-200);
-        rock.setResolution(12, 34);
-        rock.setSpawn(600, 900, 0, 400);
-        rock.create(world, 6);
-        rock.setNoGravity();
-         */
-
-        /**
         collector = new TextureActor("collector.png", main);
         collector.setResolution(156, 112);
         collector.setSpawn(605, 700, 0, 120);
@@ -200,56 +182,19 @@ public class FirstMap implements Screen
         trash.setSpeed(-1000, 0);
         trash.create(world, null);
 
-        /**
-        trashes = new TrashManager();
-        trashes.setSpawn(600, 800, 200, 400);
-        trashes.setData(12, 34, 0.5f, 0);
-        trashes.setSpeed(-1000, 0);
-        trashes.setRotation(400);
-        trashes.addTexture("rock.png", main, world, 5);
-         */
-
-        bag = new TextureActor("moon.png", main);
-        bag.setFilter((short) 0, FilterID.player_category);
-        bag.setSpawn(0,  600, -100, -300);
-        bag.setMoveVertical();
-        bag.setResolution(64, 53);
-        bag.setLimit(600);
-        bag.create(world, 4, false);    //true for playing purposes, false for testing
-
         region1 = new ArrayMap<String, Float>();
         region1.put("Armature_fly", 2.5f);
 
-        /**
-        coin = new AnimatedActor("watch.atlas", region1, main, false);
-        coin.setSpawn(0, 600, -50, -300);
-        coin.setResolution(50,50);
-        coin.setData(0, 0);
-        coin.setFilter(FilterID.coin_category, FilterID.player_category);
-        coin.setLimit(65);
-        coin.setMoveVertical();
-        coin.create(world, 5, false);
-         */
-
         coins = new Character("watch.atlas", 25, 25, main);
-        coins.setSpawn(0, 460, -50, -300);
+        coins.setSpawn(40, 420, -50, -300);
         coins.createAnimation(world, 1, 0.1f, 0, FilterID.coin_category,
-                (short)(FilterID.collector_category | FilterID.player_category), region1);
-
-        /**
-        coins1 = new Array<Character>();
-        for(int n = 0; n < 5; n++)
-        {
-            coins1.add(new Character("watch.atlas", 25, 25, main));
-            coins1.get(n).setSpawn(0, 460, -50, -300);
-            coins1.get(n).createAnimation(world, n, 0, 0, FilterID.coin_category,
-                    (short)(FilterID.collector_category | FilterID.player_category), region1);
-        }*/
+                (short)(FilterID.collector_category | FilterID.player_category
+                        | FilterID.bandit_category | FilterID.enemy_category), region1);
 
         collector1 = new Character("ship1.png", 64, 22, main);
         collector1.setSpawn(60, 400, -50, -300);
-        collector1.createTexture(world, 1, 0, 0, FilterID.collector_category,
-                (short)(FilterID.coin_category | FilterID.player_category));
+        collector1.createTexture(world, 1, 1, 0, FilterID.collector_category,
+                (short)(FilterID.coin_category | FilterID.player_category | FilterID.enemy_category));
 
         event = new Event();
 
@@ -302,11 +247,7 @@ public class FirstMap implements Screen
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                //joint.destroy(world);
-                //trash.makeFall(true);
-                //trash.setFree();
 
-                trashes.setFree();
             }
         });
     }
@@ -358,11 +299,16 @@ public class FirstMap implements Screen
         //bag.displayAll(800);
 
         coins.display(1600);
+        if(event.isDestroyCoin())
+        {
+            event.resetPlayerCollision();
+            coins.forceRespawn();
+        }
         if(coins.outOfRange())
         {
             System.out.println("respawn");
+            event.resetPlayerCollision();
             coins.forceRespawn();
-            player.resetFilter();
             if(hud.getCoin() != 11)
             {
                 hud.addCoin(1);
@@ -377,6 +323,27 @@ public class FirstMap implements Screen
         splash.render(player.getX(), player.getY());
 
         main.batch.end();
+
+        if(event.isAddScore())
+        {
+            hud.addTotal(hud.getCoin());
+            hud.removeCoin(hud.getCoin());
+        }
+        if(event.isBanditCollide())
+        {
+            hud.removeTotal(5);
+            hud.removeCoin(hud.getCoin());
+        }
+
+        if(collision_filter.feedback(FilterID.enemy_category, FilterID.collector_category))
+        {
+            collector1.forceRespawn();
+        }
+        else if(collision_filter.feedback(FilterID.player_category, FilterID.enemy_category))
+        {
+            main.setScreen(new UIMenu(main));
+            dispose();
+        }
 
         //player blows up if coin amount is more than 10
         if(hud.getCoin() > 10)

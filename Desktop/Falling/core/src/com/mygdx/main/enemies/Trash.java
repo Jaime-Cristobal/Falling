@@ -240,8 +240,8 @@ public class Trash implements ContactListener
         Short filterA = contact.getFixtureA().getFilterData().categoryBits;
         Short filterB = contact.getFixtureB().getFilterData().categoryBits;
 
-        if(contact.getFixtureA().getFilterData().categoryBits == FilterID.magnet_category
-                || contact.getFixtureB().getFilterData().categoryBits == FilterID.magnet_category)
+        if(contact.getFixtureA().getFilterData().categoryBits == FilterID.enemy_category
+                || contact.getFixtureB().getFilterData().categoryBits == FilterID.enemy_category)
             contact.setEnabled(false);
     }
 

@@ -124,8 +124,7 @@ public class Character
 
     public boolean outOfRange()
     {
-        if((actor.getX() < 0 || actor.getX() > 46 || actor.getY() < -70 || actor.getY() > 70)
-                )
+        if((actor.getX() < -10 || actor.getX() > 50 || actor.getY() < -70 || actor.getY() > 70))
         {
             event = false;
             return true;

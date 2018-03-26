@@ -27,7 +27,7 @@ public class HUD implements GestureListener
     final public CheckBox menu;
 
     private Label amount;   //amount of trash
-    private int coinAmount;
+    private int coinAmount, scoreTotal;
 
     final public GestureDetector detector;
 
@@ -50,12 +50,13 @@ public class HUD implements GestureListener
         weapons.setX(275f);
         weapons.setY(-210f);
 
-        score = new Label("Distance: 0 Km", main.skin);
+        score = new Label("Score: 0", main.skin);
         shoot = new CheckBox(null, main.skin);
         menu = new CheckBox(null, main.skin);
 
-        amount = new Label("Trash: 0", main.skin);
+        amount = new Label("Coin: 0", main.skin);
         coinAmount = 0;
+        scoreTotal = 0;
 
         detector = new GestureDetector(this);
     }
@@ -73,7 +74,7 @@ public class HUD implements GestureListener
         stage.addActor(menutable);
         stage.addActor(weapons);
 
-        //scoretable.add(score).fillX().uniformX();
+        scoretable.add(score).fillX().uniformX().center().right().pad(0, 20, 0, 20);
         scoretable.add(amount).fillX().uniformX();
 
         menutable.add(menu).fillX().uniformX();
@@ -85,7 +86,7 @@ public class HUD implements GestureListener
     {
         distance.Run();
 
-        //score.setText("Distance: " + distance.GetScore() + " Km");
+        score.setText("Score: " + scoreTotal);
         amount.setText("Coin: " + coinAmount);
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -110,6 +111,26 @@ public class HUD implements GestureListener
     public void addCoin(int val)
     {
         coinAmount += val;
+    }
+
+    public void addTotal(int val)
+    {
+        if(val >= 0)
+            scoreTotal += val;
+        else
+            System.err.println("Value for function addTotal in HUD.java must be a positive value");
+    }
+
+    public void removeTotal(int val)
+    {
+        if(scoreTotal - val < 0)
+        {
+            scoreTotal = 0;
+        }
+        else
+        {
+            scoreTotal -= val;
+        }
     }
 
     public void removeCoin(int val)

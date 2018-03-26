@@ -27,8 +27,6 @@ public class AnimatedActor implements GameActor
     private float xMax;
     private float yMin;
     private float yMax;
-    private float width;
-    private float height;
     private short objectHex;
     private short playerHex;
 
@@ -66,27 +64,14 @@ public class AnimatedActor implements GameActor
         movement.setSpawn(xMin, xMax, yMin, yMax);
     }
 
-    /**Because having it automatically take the images' original width and height
-     * is too much hassle*/
-    public void setResolution(float w, float h)
-    {
-        width = w;
-        height = h;
-    }
-
-    /**bodyType is initialized as a default dynamic body*/
-    public void setBodyType(BodyDef.BodyType type)
-    {
-        bodyType = type;
-    }
-
     /**Manually set the body's density(heaviness) and restitution(bounciness)
      * values.
      * The default values are density = 0 and restitution = 0.1f*/
-    public void setData(float dens, float resti)
+    public void setData(float dens, float resti, BodyDef.BodyType type)
     {
         density = dens;
         resitution = resti;
+        bodyType = type;
     }
 
     public void setFilter(short hex1, short hex2)
@@ -96,24 +81,20 @@ public class AnimatedActor implements GameActor
     }
 
     /**Because we like controlling when our objects respawn*/
-    public void setLimit(float value)
+    public void setLimit(float value, boolean isVertical)
     {
         movement.setLimit(value);
+        if(isVertical)
+        {
+            movement.setDirection(1, 0);
+        }
     }
 
-    /**
-     * setDirection(vertical, horizontal) - which direction has the value
-     * of 1 will have movement on that direction
-     * */
-    public void setMoveVertical()
-    {
-        movement.setDirection(1, 0);
-    }
     /***
      * DO NOT CALL this without calling setSpawn, setFilter, AND setResolution
      * beforehand. If you do, you are a bad mannnnnnnnn.
      * */
-    public void create(World world, int amount, boolean isSensor)
+    public void create(World world, float width, float height,  int amount, boolean isSensor)
     {
         for(int n = 0; n < amount; n++)
         {

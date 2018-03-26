@@ -19,8 +19,8 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 public class Event implements ContactListener
 {
     private Object actor;
-    private boolean addScore, subScore, isSplash;
-    private boolean collision;
+    private boolean addScore, destroyCoin, subScore, isSplash;
+    private boolean playerCol, banditCol;
 
     private Player player;
     private Character coin, collector;
@@ -30,7 +30,9 @@ public class Event implements ContactListener
         addScore = false;
         subScore = false;
         isSplash = false;
-        collision = false;
+        playerCol = false;
+        banditCol = false;
+        destroyCoin = false;
 
         player = null;
         coin = null;
@@ -50,6 +52,26 @@ public class Event implements ContactListener
     public void setPlayer(Player player)
     {
         this.player = player;
+    }
+
+    public boolean isAddScore()
+    {
+        return addScore;
+    }
+
+    public boolean isDestroyCoin()
+    {
+        return destroyCoin;
+    }
+
+    public boolean isBanditCollide()
+    {
+        return banditCol;
+    }
+
+    public void resetPlayerCollision()
+    {
+        playerCol = false;
     }
 
     /**Register this to box2D World*/
@@ -75,28 +97,53 @@ public class Event implements ContactListener
                 || (FilterID.coin_category == filterB && FilterID.player_category == filterA))
         {
             System.out.println("rekt");
-            player.setFilterEmpty();
-            contact.setEnabled(false);
+            playerCol = true;
             coin.setEvent(player.getX() * 1000 * Gdx.graphics.getDeltaTime(),
                     player.getY() * 1000 * Gdx.graphics.getDeltaTime());
         }
-        else
-        {
-            contact.setEnabled(true);
-        }
 
-        if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
+        else if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
                 || (FilterID.collector_category == filterB && FilterID.player_category == filterA))
         {
             System.out.println("HIT");
+            addScore = true;
+        }
+
+        else if((FilterID.collector_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.collector_category == filterB && FilterID.coin_category == filterA)
+                && !playerCol)
+        {
+            System.out.println("DELETE BOI");
+            destroyCoin = true;
+        }
+        else if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.bandit_category == filterB && FilterID.coin_category == filterA)
+                && !playerCol)
+        {
+            System.out.println("DELETE BOI");
+            destroyCoin = true;
+        }
+        else if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.enemy_category == filterB && FilterID.coin_category == filterA)
+                && !playerCol)
+        {
+            System.out.println("DELETE BOI");
+            destroyCoin = true;
+        }
+        else if((FilterID.bandit_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.bandit_category == filterB && FilterID.player_category == filterA))
+        {
+            System.out.println("BANDIT HIT");
+            banditCol = true;
         }
     }
 
     /** Called when two fixtures cease to touch. */
     public void endContact (Contact contact)
     {
-        collision = false;
-        //leave blank
+        addScore = false;
+        destroyCoin = false;
+        banditCol = false;
     }
 
     /*
@@ -108,7 +155,36 @@ public class Event implements ContactListener
      */
     public void preSolve (Contact contact, Manifold oldManifold)
     {
-        //leave blank
+        Object aActor = contact.getFixtureA().getBody().getUserData();
+        Object bActor = contact.getFixtureB().getBody().getUserData();
+        short filterA = contact.getFixtureA().getFilterData().categoryBits;
+        short filterB = contact.getFixtureB().getFilterData().categoryBits;
+
+        if((FilterID.coin_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.coin_category == filterB && FilterID.player_category == filterA))
+        {
+            contact.setEnabled(false);
+        }
+        else if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.collector_category == filterB && FilterID.player_category == filterA))
+        {
+            contact.setEnabled(false);
+        }
+        else if((FilterID.bandit_category == filterA && FilterID.player_category == filterB)
+                || (FilterID.bandit_category == filterB && FilterID.player_category == filterA))
+        {
+            contact.setEnabled(false);
+        }
+        else if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.bandit_category == filterB && FilterID.coin_category == filterA))
+        {
+            contact.setEnabled(false);
+        }
+        else if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.enemy_category == filterB && FilterID.coin_category == filterA))
+        {
+            contact.setEnabled(false);
+        }
     }
 
     /*

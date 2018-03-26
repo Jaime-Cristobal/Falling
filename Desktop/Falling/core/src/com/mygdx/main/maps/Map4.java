@@ -2,6 +2,7 @@ package com.mygdx.main.maps;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -104,11 +105,10 @@ public class Map4 implements MapManager
         name = "ship1";
         enemies.put(name, new TextureActor("ship1.png", main));
         enemies.get(name).setSpawn(700, 2000, 0, 440);
-        enemies.get(name).setResolution(450, 108);
-        enemies.get(name).setLimit(-300);
+        enemies.get(name).setLimit(-300, true);
         enemies.get(name).setFilter(FilterID.enemy_category, FilterID.player_category);
-        enemies.get(name).setData(1f, 0);
-        enemies.get(name).create(world, 2, false);
+        enemies.get(name).setData(1f, 0, BodyDef.BodyType.DynamicBody);
+        enemies.get(name).create(world, 450, 108, 2, false);
         enemies.get(name).setNoGravity();
     }
 
