@@ -5,12 +5,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.mygdx.main.Main;
 import com.mygdx.main.actors.Movement;
 import com.mygdx.main.actors.creation.CreateActor;
 import com.mygdx.main.actors.creation.CreateAnimation;
 import com.mygdx.main.actors.creation.CreateTexture;
+import com.mygdx.main.ui.Scaler;
 
 /**
  * Created by seacow on 3/11/2018.
@@ -27,9 +29,11 @@ public class Character
     private Vector2 playerPos;
     private boolean event;
 
+    private float screenWidth, screenHeight;
+
     private float playerX, playerY;
 
-    public Character(String file, float width, float height, Main main)
+    public Character(String file, float width, float height, Main main, Stage stage)
     {
         this.main = main;
         movement = new Movement();
@@ -47,6 +51,9 @@ public class Character
 
         playerX = 0;
         playerY = 0;
+
+        screenWidth = Gdx.graphics.getWidth() / Scaler.PIXELS_TO_METERS;
+        screenHeight = Gdx.graphics.getHeight() / Scaler.PIXELS_TO_METERS;
     }
 
     public void setSpawn(float xMin, float xMax, float yMin, float yMax)
@@ -124,7 +131,8 @@ public class Character
 
     public boolean outOfRange()
     {
-        if((actor.getX() < -10 || actor.getX() > 50 || actor.getY() < -70 || actor.getY() > 70))
+        if((actor.getX() < -10 || actor.getX() > screenWidth + 50 || actor.getY() < -70
+                || actor.getY() > screenHeight + 70))
         {
             event = false;
             return true;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.mygdx.main.Main;
 import com.mygdx.main.animator.Animator;
+import com.mygdx.main.ui.Scaler;
 
 /**
  * Created by FlapJack on 7/22/2017.
@@ -140,12 +141,13 @@ public class Background
 
             timechange = true;
 
-            System.out.println(" " + limit);
+            //System.out.println(" " + limit);
         }
 
         //System.out.println(x);
 
-        main.batch.draw((Texture)main.assetmanager.dataholder.get(file), x, y, width, height);
+        main.batch.draw((Texture)main.assetmanager.dataholder.get(file), x, y,
+                width, height);
 
         if(horizontal)
             x -= Gdx.graphics.getDeltaTime() * speed;   //subtraction dictates its moving to the left

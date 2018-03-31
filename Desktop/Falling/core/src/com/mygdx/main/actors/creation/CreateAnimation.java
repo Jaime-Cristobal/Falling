@@ -67,13 +67,13 @@ public class CreateAnimation implements CreateActor
     public void create(World world, float xPos, float yPos, float w, float h, boolean isSensor)
     {
         animate.setScale(w, h);
-        width = animate.getWidth() / Scaler.scaleX;
-        height = animate.getHeight() / Scaler.scaleY;
+        width = animate.getWidth();
+        height = animate.getHeight();
 
         x = xPos + (width / 2);
         y = yPos + (height / 2);
 
-        box2dBody.create(file, world, x, y, width, height, isSensor);
+        box2dBody.create(file, world, x, y, width / Scaler.scaleX, height / Scaler.scaleY, isSensor);
         box2dBody.body.setActive(true);
     }
 

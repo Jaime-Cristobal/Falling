@@ -1,10 +1,11 @@
 package com.mygdx.main;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import javax.xml.soap.Text;
 
 /**
  * Created by FlapJack on 7/29/2017.
@@ -41,6 +42,12 @@ public class Asset
         dataholder.load("ship1.png", Texture.class);
         dataholder.load("parachute.png", Texture.class);
         dataholder.load("collector.png", Texture.class);
+        dataholder.load("map1.png", Texture.class);
+        dataholder.load("map_back.png", Texture.class);
+        dataholder.load("map_mid.png", Texture.class);
+        dataholder.load("map_front.png", Texture.class);
+        dataholder.load("smoke_1.png", Texture.class);
+        dataholder.load("smoke_2.png", Texture.class);
 
         dataholder.load("player.atlas", TextureAtlas.class);
         dataholder.load("branch.atlas", TextureAtlas.class);

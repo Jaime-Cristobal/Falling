@@ -43,7 +43,7 @@ public class HUD implements GestureListener
         scoretable.setY(280f);
 
         menutable = new Table();
-        menutable.setX(205);
+        menutable.setX(185);
         menutable.setY(280f);
 
         weapons = new Table();
@@ -64,6 +64,9 @@ public class HUD implements GestureListener
     public void Create()
     {
         distance.create();
+        scoretable.setTransform(true);
+        menutable.setTransform(true);
+        weapons.setTransform(true);
 
         //Creates the buttons
         scoretable.setFillParent(true);

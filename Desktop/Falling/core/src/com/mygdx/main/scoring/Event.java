@@ -102,7 +102,7 @@ public class Event implements ContactListener
                     player.getY() * 1000 * Gdx.graphics.getDeltaTime());
         }
 
-        else if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
+        if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
                 || (FilterID.collector_category == filterB && FilterID.player_category == filterA))
         {
             System.out.println("HIT");
@@ -116,15 +116,9 @@ public class Event implements ContactListener
             System.out.println("DELETE BOI");
             destroyCoin = true;
         }
-        else if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
+
+        if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
                 || (FilterID.bandit_category == filterB && FilterID.coin_category == filterA)
-                && !playerCol)
-        {
-            System.out.println("DELETE BOI");
-            destroyCoin = true;
-        }
-        else if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
-                || (FilterID.enemy_category == filterB && FilterID.coin_category == filterA)
                 && !playerCol)
         {
             System.out.println("DELETE BOI");
@@ -135,6 +129,14 @@ public class Event implements ContactListener
         {
             System.out.println("BANDIT HIT");
             banditCol = true;
+        }
+
+        if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
+                || (FilterID.enemy_category == filterB && FilterID.coin_category == filterA)
+                && !playerCol)
+        {
+            System.out.println("DELETE BOI");
+            destroyCoin = true;
         }
     }
 
@@ -165,22 +167,22 @@ public class Event implements ContactListener
         {
             contact.setEnabled(false);
         }
-        else if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
+        if((FilterID.collector_category == filterA && FilterID.player_category == filterB)
                 || (FilterID.collector_category == filterB && FilterID.player_category == filterA))
         {
             contact.setEnabled(false);
         }
-        else if((FilterID.bandit_category == filterA && FilterID.player_category == filterB)
+        if((FilterID.bandit_category == filterA && FilterID.player_category == filterB)
                 || (FilterID.bandit_category == filterB && FilterID.player_category == filterA))
         {
             contact.setEnabled(false);
         }
-        else if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
+        if((FilterID.bandit_category == filterA && FilterID.coin_category == filterB)
                 || (FilterID.bandit_category == filterB && FilterID.coin_category == filterA))
         {
             contact.setEnabled(false);
         }
-        else if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
+        if((FilterID.enemy_category == filterA && FilterID.coin_category == filterB)
                 || (FilterID.enemy_category == filterB && FilterID.coin_category == filterA))
         {
             contact.setEnabled(false);
@@ -196,5 +198,6 @@ public class Event implements ContactListener
     public void postSolve (Contact contact, ContactImpulse impulse)
     {
         //leave blank
+        contact.setEnabled(true);
     }
 }

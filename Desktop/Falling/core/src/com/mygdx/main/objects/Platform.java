@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.main.Main;
 import com.mygdx.main.actors.creation.CreateActor;
 import com.mygdx.main.actors.creation.CreateTexture;
+import com.mygdx.main.ui.Scaler;
 
 /**
  * Created by FlapJack on 8/7/2017.
@@ -33,7 +34,7 @@ public class Platform
 
     public void create(World world, float xVal, float yVal, float w, float h)
     {
-        object.create(world, xVal, yVal, w, h, false);
+        object.create(world, xVal, yVal, w * Scaler.scaleX, h * Scaler.scaleY, false);
     }
 
     /**Only render if file isn't null, empty box2D bodies do not need to rendered*/

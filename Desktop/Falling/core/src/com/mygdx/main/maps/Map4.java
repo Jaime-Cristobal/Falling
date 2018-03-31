@@ -30,6 +30,7 @@ public class Map4 implements MapManager
     final private ArrayMap<String, Background> cloudsFront;
     final private ArrayMap<String, GameActor> enemies;
 
+    final private Background smoke1, smoke2;
 
     public Map4(Main mainParam, World worldParam)
     {
@@ -43,6 +44,9 @@ public class Map4 implements MapManager
         cloudsFront = new ArrayMap<String, Background>();
         enemies = new ArrayMap<String, GameActor>();
 
+        smoke1 = new Background("smoke_1.png", main, true);
+        smoke2 = new Background("smoke_2.png", main, true);
+
         this.world = worldParam;
     }
 
@@ -51,6 +55,12 @@ public class Map4 implements MapManager
         //reateBranch();
         createClouds();
         createEnemy();
+
+        smoke1.setSpawnArea(450, 700, 30, 30);
+        smoke1.setResolution(403, 185);
+
+        smoke2.setSpawnArea(450, 700, -35, -35);
+        smoke2.setResolution(403, 204);
     }
 
     private void createBranch()
@@ -124,21 +134,32 @@ public class Map4 implements MapManager
      * Note: The render order is that first top line is at the bottom of/behind the next line */
     public void display(float stageWidth, float stageHeight)
     {
-        main.batch.draw((Texture) main.assetmanager.dataholder.get("map4.png"), 0, 0,   //first line
+        main.batch.draw((Texture) main.assetmanager.dataholder.get("map_back.png"), 0, 0,   //first line
                 stageWidth, stageHeight);                                                     //rendered at the back
+        main.batch.draw((Texture) main.assetmanager.dataholder.get("map_mid.png"), 0, 0,
+                stageWidth, stageHeight);
+        smoke1.display(-400, 40);
+        main.batch.draw((Texture) main.assetmanager.dataholder.get("map_front.png"), 0, 0,
+                stageWidth, stageHeight);
+        //smoke2.display(-400, 40);
 
-        main.batch.draw((Texture) main.assetmanager.dataholder.get("map4_parts.png"), 0, 0, 600, 515);
+        //main.batch.draw((Texture) main.assetmanager.dataholder.get("map4_parts.png"), 0, 0, 600, 515);
 
-        for(ObjectMap.Entry<String, Background> iter : cloudsBack)
-            iter.value.display(-50, 50);
+        //for(ObjectMap.Entry<String, Background> iter : cloudsBack)
+        //    iter.value.display(-50, 50);
 
         //for(ObjectMap.Entry<String, Background> iter : branches)
         //    iter.value.display(500, 350);
 
-        for(ObjectMap.Entry<String, Background> iter : cloudsFront)
-            iter.value.display(-200, 100);
+        //for(ObjectMap.Entry<String, Background> iter : cloudsFront)
+        //    iter.value.display(-200, 100);
 
         //for(ObjectMap.Entry<String, GameActor> iter : enemies)
         //    iter.value.displayAll(-600);
+    }
+
+    public void displayLast(float stageWidth, float stageHeight)
+    {
+        smoke2.display(-400, 40);
     }
 }

@@ -65,7 +65,7 @@ public class FirstMap implements Screen
     private float width;
     private float height;
 
-    final private CreateActor parachute;
+    //final private CreateActor parachute;
 
     private FilterDetector collision_filter;
     private Player player;
@@ -114,8 +114,8 @@ public class FirstMap implements Screen
         world = new World(new Vector2(0, -9.8f), true);
         collision_filter = new FilterDetector();
 
-        camera = new OrthographicCamera(width, height);
-        viewport = new ExtendViewport(width, height, camera);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new ExtendViewport(400, 600, camera);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
@@ -126,11 +126,11 @@ public class FirstMap implements Screen
 
         ground = new Platform();
         ground.setFilter(FilterID.floor_category, FilterID.player_category);
-        ground.create(world, 0, -50, 460, 10);
+        ground.create(world, 0, -50, 400, 10);
 
         ceiling = new Platform();
         ceiling.setFilter(FilterID.ceiling_category, FilterID.player_category);
-        ceiling.create(world, 0, 600, 460, 5);
+        ceiling.create(world, 0, 600, 400, 5);
 
         leftwall = new Platform();
         leftwall.setFilter(FilterID.ceiling_category, FilterID.player_category);
@@ -138,7 +138,7 @@ public class FirstMap implements Screen
 
         rightwall = new Platform();
         rightwall.setFilter(FilterID.ceiling_category, FilterID.player_category);
-        rightwall.create(world, 460, 0, 10, 600);
+        rightwall.create(world, 400, 0, 10, 600);
 
         enemy = new EnemyManager(main);
         enemy.create(world);
@@ -162,9 +162,11 @@ public class FirstMap implements Screen
 
         //Gdx.input.setInputProcessor(new GestureDetector(new Gesture()));
 
+        /**
         parachute = new CreateTexture("parachute.png", main, BodyDef.BodyType.DynamicBody);
         parachute.setFilter(FilterID.enemy_category, FilterID.player_category);
         parachute.create(world, 1000, 1000, 128, 106, false);
+         */
 
         /**
         collector = new TextureActor("collector.png", main);
@@ -185,14 +187,14 @@ public class FirstMap implements Screen
         region1 = new ArrayMap<String, Float>();
         region1.put("Armature_fly", 2.5f);
 
-        coins = new Character("watch.atlas", 25, 25, main);
-        coins.setSpawn(40, 420, -50, -300);
+        coins = new Character("watch.atlas", 25, 25, main, stage);
+        coins.setSpawn(40, 320, -50, -300);
         coins.createAnimation(world, 1, 0.1f, 0, FilterID.coin_category,
                 (short)(FilterID.collector_category | FilterID.player_category
                         | FilterID.bandit_category | FilterID.enemy_category), region1);
 
-        collector1 = new Character("ship1.png", 64, 22, main);
-        collector1.setSpawn(60, 400, -50, -300);
+        collector1 = new Character("ship1.png", 64, 22, main, stage);
+        collector1.setSpawn(60, 300, -50, -300);
         collector1.createTexture(world, 1, 1, 0, FilterID.collector_category,
                 (short)(FilterID.coin_category | FilterID.player_category | FilterID.enemy_category));
 
@@ -322,6 +324,8 @@ public class FirstMap implements Screen
 
         splash.render(player.getX(), player.getY());
 
+        mapSelect.displayLast(stage.getWidth(), stage.getHeight());
+
         main.batch.end();
 
         if(event.isAddScore())
@@ -329,7 +333,7 @@ public class FirstMap implements Screen
             hud.addTotal(hud.getCoin());
             hud.removeCoin(hud.getCoin());
         }
-        if(event.isBanditCollide())
+        else if(event.isBanditCollide())
         {
             hud.removeTotal(5);
             hud.removeCoin(hud.getCoin());
@@ -339,11 +343,6 @@ public class FirstMap implements Screen
         {
             collector1.forceRespawn();
         }
-        else if(collision_filter.feedback(FilterID.player_category, FilterID.enemy_category))
-        {
-            main.setScreen(new UIMenu(main));
-            dispose();
-        }
 
         //player blows up if coin amount is more than 10
         if(hud.getCoin() > 10)
@@ -352,9 +351,16 @@ public class FirstMap implements Screen
             dispose();
         }
 
+
         //debugRenderer.render(world, debugMatrix);
 
         hud.Render();
+
+        if(collision_filter.feedback(FilterID.player_category, FilterID.enemy_category))
+        {
+            main.setScreen(new UIMenu(main));
+            dispose();
+        }
     }
 
     /** @see ApplicationListener#resize(int, int) */

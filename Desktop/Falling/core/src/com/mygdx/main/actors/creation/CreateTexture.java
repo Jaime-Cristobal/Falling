@@ -109,7 +109,8 @@ public class CreateTexture implements CreateActor
     public void display()
     {
         sprite.setRotation((float)Math.toDegrees(box2dBody.body.getAngle()));
-        renderer.render(main, sprite, box2dBody.body, width, height);
+        renderer.render(main, sprite, box2dBody.body, width ,
+                height);
     }
 
     /**false sets the box2D body to sleep (unmovable)*/

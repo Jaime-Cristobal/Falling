@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.main.actors.creation.CreateActor;
+import com.mygdx.main.ui.Scaler;
 
 /**
  * Created by seacow on 12/17/2017.
@@ -96,8 +97,8 @@ public class Movement
 
     private boolean respawn(CreateActor currentActor)
     {
-        if(((int)currentActor.getX() == limit && vertical == 0) ||
-                ((int)currentActor.getY() == limit && horizontal == 0))
+        if(((int)currentActor.getX() == limit / Scaler.PIXELS_TO_METERS && vertical == 0) ||
+                ((int)currentActor.getY() == limit / Scaler.PIXELS_TO_METERS && horizontal == 0))
         {
             justRespawned = true;
             return true;

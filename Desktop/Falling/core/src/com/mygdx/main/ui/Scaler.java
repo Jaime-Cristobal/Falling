@@ -9,6 +9,6 @@ import com.badlogic.gdx.Gdx;
 public class Scaler
 {
     public final static float PIXELS_TO_METERS = 10f;
-    public final static float scaleX = (Gdx.graphics.getWidth() / 460);
+    public final static float scaleX = (Gdx.graphics.getWidth() / 400);
     public final static float scaleY = (Gdx.graphics.getHeight() / 600);
 }
